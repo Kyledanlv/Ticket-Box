@@ -7,7 +7,6 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class PdfResponse {
-    private Long id;
-    private String url;
+public class EventLowestPrice {
+    private Double lowestPrice;
 }
