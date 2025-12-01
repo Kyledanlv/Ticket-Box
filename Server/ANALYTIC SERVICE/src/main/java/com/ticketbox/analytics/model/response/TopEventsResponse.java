@@ -1,3 +1,4 @@
+// Server/ANALYTIC SERVICE/src/main/java/com/ticketbox/analytics/model/response/TopEventsResponse.java
 package com.ticketbox.analytics.model.response;
 
 import java.math.BigDecimal;
@@ -17,6 +18,7 @@ public class TopEventsResponse {
     public static class TopEvent {
         private String eventId;
         private String eventName;
+        private String ticketType;
         private BigDecimal revenue;
         private Integer ticketsSold;
         private Integer totalCapacity;
@@ -37,6 +39,14 @@ public class TopEventsResponse {
 
         public void setEventName(String eventName) {
             this.eventName = eventName;
+        }
+
+        public String getTicketType() {
+            return ticketType;
+        }
+
+        public void setTicketType(String ticketType) {
+            this.ticketType = ticketType;
         }
 
         public BigDecimal getRevenue() {

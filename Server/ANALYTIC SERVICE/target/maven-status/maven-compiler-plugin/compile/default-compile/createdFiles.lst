@@ -1,2 +1,15 @@
+com\ticketbox\analytics\model\response\RevenueResponse$RevenueSummary.class
+com\ticketbox\analytics\model\response\RevenueResponse$RevenueDataPoint.class
+com\ticketbox\analytics\model\response\TopEventsResponse$TopEvent.class
+com\ticketbox\analytics\service\AnalyticsServiceImpl.class
+com\ticketbox\analytics\model\response\TopEventsResponse.class
 com\ticketbox\analytics\AnalyticsServiceApplication.class
+com\ticketbox\analytics\config\ReadOnlyDataSourceConfig.class
+com\ticketbox\analytics\controller\TestController.class
+com\ticketbox\analytics\model\response\RevenueResponse.class
+com\ticketbox\analytics\controller\AnalyticsController.class
+com\ticketbox\analytics\config\SecurityConfig.class
 com\ticketbox\analytics\config\RedisConfig.class
+com\ticketbox\analytics\config\AsyncConfig.class
+com\ticketbox\analytics\service\AnalyticsService.class
+com\ticketbox\analytics\model\response\KPIResponse.class

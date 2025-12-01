@@ -16,7 +16,6 @@ public class AnalyticsController {
     private static final Logger log = LoggerFactory.getLogger(AnalyticsController.class);
     private final AnalyticsService analyticsService;
 
-    // Constructor injection
     public AnalyticsController(AnalyticsService analyticsService) {
         this.analyticsService = analyticsService;
     }
@@ -27,6 +26,7 @@ public class AnalyticsController {
         return ResponseEntity.ok("Analytics Service is running");
     }
 
+    // ✅ ĐÚNG - Khớp với interface
     @GetMapping("/revenue/system")
     public ResponseEntity<RevenueResponse> getSystemRevenue(
             @RequestParam(defaultValue = "30d") String timeRange) {
@@ -34,6 +34,7 @@ public class AnalyticsController {
         return ResponseEntity.ok(analyticsService.getSystemRevenue(timeRange));
     }
 
+    // ✅ ĐÚNG - Khớp với interface
     @GetMapping("/revenue/organizer/{organizerId}")
     public ResponseEntity<RevenueResponse> getOrganizerRevenue(
             @PathVariable String organizerId,
@@ -42,6 +43,7 @@ public class AnalyticsController {
         return ResponseEntity.ok(analyticsService.getOrganizerRevenue(organizerId, timeRange));
     }
 
+    // ✅ ĐÚNG - Khớp với interface
     @GetMapping("/revenue/event/{eventId}")
     public ResponseEntity<RevenueResponse> getEventRevenue(
             @PathVariable String eventId,
@@ -50,6 +52,7 @@ public class AnalyticsController {
         return ResponseEntity.ok(analyticsService.getEventRevenue(eventId, timeRange));
     }
 
+    // ✅ ĐÚNG - Khớp với interface (KHÔNG có timeRange)
     @GetMapping("/events/top")
     public ResponseEntity<TopEventsResponse> getTopEvents(
             @RequestParam(defaultValue = "10") int limit) {
@@ -57,6 +60,7 @@ public class AnalyticsController {
         return ResponseEntity.ok(analyticsService.getTopEvents(limit));
     }
 
+    // ✅ ĐÚNG - Khớp với interface (KHÔNG có timeRange)
     @GetMapping("/events/organizer/{organizerId}")
     public ResponseEntity<TopEventsResponse> getOrganizerTopEvents(
             @PathVariable String organizerId,
@@ -65,6 +69,7 @@ public class AnalyticsController {
         return ResponseEntity.ok(analyticsService.getOrganizerTopEvents(organizerId, limit));
     }
 
+    // ✅ ĐÚNG - Khớp với interface
     @GetMapping("/kpi/system")
     public ResponseEntity<KPIResponse> getSystemKPI(
             @RequestParam(defaultValue = "30d") String timeRange) {
@@ -72,6 +77,7 @@ public class AnalyticsController {
         return ResponseEntity.ok(analyticsService.getSystemKPI(timeRange));
     }
 
+    // ✅ ĐÚNG - Khớp với interface
     @GetMapping("/kpi/organizer/{organizerId}")
     public ResponseEntity<KPIResponse> getOrganizerKPI(
             @PathVariable String organizerId,
@@ -79,6 +85,8 @@ public class AnalyticsController {
         log.info("Fetching organizer KPI for: {} with timeRange: {}", organizerId, timeRange);
         return ResponseEntity.ok(analyticsService.getOrganizerKPI(organizerId, timeRange));
     }
+
+    // ✅ ĐÚNG - Khớp với interface
     @GetMapping("/events/{eventId}/ticket-comparison")
     public ResponseEntity<TopEventsResponse> getEventTicketComparison(
             @PathVariable String eventId) {
