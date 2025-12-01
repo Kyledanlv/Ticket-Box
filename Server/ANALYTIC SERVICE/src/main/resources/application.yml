@@ -1,0 +1,42 @@
+spring:
+  application:
+    name: analytics-service
+  
+  datasource:
+    url: jdbc:mysql://localhost:3306/TICKET_BOX?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=UTC
+    username: root
+    password: 'DK#130300#Ngoc'
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      connection-timeout: 30000
+      maximum-pool-size: 10
+      read-only: true
+
+  # Tắt JPA hoàn toàn
+  jpa:
+    enabled: false
+
+  # Tắt Security
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
+      - org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration
+
+server:
+  port: 8081
+
+logging:
+  level:
+    root: INFO
+    com.ticketbox.analytics: DEBUG
+    org.springframework.jdbc.core.JdbcTemplate: DEBUG
+    org.springframework.jdbc.core.StatementCreatorUtils: TRACE
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    enabled: true
