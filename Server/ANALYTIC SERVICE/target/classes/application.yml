@@ -37,6 +37,15 @@ logging:
 springdoc:
   api-docs:
     path: /api-docs
+    enabled: true
   swagger-ui:
     path: /swagger-ui.html
     enabled: true
+    operations-sorter: method
+    tags-sorter: alpha
+    display-request-duration: true
+    doc-expansion: none
+    filter: true
+  packages-to-scan: com.ticketbox.analytics
+  paths-to-match: /api/**
+  show-actuator: true
