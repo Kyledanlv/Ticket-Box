@@ -1,4 +1,3 @@
-// Client/ticket-box-client-service/src/analytics/components/charts/KPICard.jsx
 import React from 'react';
 import { TrendingUp, TrendingDown } from 'lucide-react';
 import { formatCurrency, formatNumber, formatPercentage } from '../../utils/formatters';

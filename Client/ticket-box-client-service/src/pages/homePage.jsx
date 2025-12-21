@@ -1,3 +1,4 @@
+// Client/ticket-box-client-service/src/pages/homePage.jsx - UPDATED VERSION
 import React from "react";
 import { Link } from "react-router-dom";
 import {
@@ -6,9 +7,13 @@ import {
   ChevronRight,
   Loader2,
   AlertCircle,
+  Calendar,
+  Shield,
+  TrendingUp,
 } from "lucide-react";
 import EventCarouselRow from "../components/eventCarouselRow";
 import DestinationCard from "../components/destinationCard";
+import { useAuthStore } from "../store/useAuthStore";
 import {
   useEventsByEventIds,
   useEventsByCategory,
@@ -81,12 +86,10 @@ const EventSection = ({ title, categoryId, link = "#" }) => {
     return null;
   }
 
-  // FIX: Removed the hook call from inside .map()
   const formattedEvents = events.map((event) => ({
     id: event.id,
     title: event.name,
     imageUrl: event.img?.url || `https://placehold.co/400x300/111/fff?text=${event.name}`,
-    // We do NOT pass 'price' here. The EventCard component will fetch it.
     date: new Date(event.startDate).toLocaleDateString(),
   }));
 
@@ -98,8 +101,6 @@ const EventSection = ({ title, categoryId, link = "#" }) => {
 const EventCarouselSection = () => {
   const [carouselIndex, setCarouselIndex] = React.useState(0);
   
-  // Note: Ensure useEventsByEventIds is implemented in useEventHook if you use it here
-  // For now, this assumes it returns a list of events similar to the other hooks
   const {
     data: eventData,
     isLoading,
@@ -129,9 +130,6 @@ const EventCarouselSection = () => {
     id: event.id,
     title: event.name,
     imageUrl: event.img?.url || `https://placehold.co/400x300/111/fff?text=${event.name}`,
-    // Carousel might display price differently or fetch it similarly
-    // For the carousel, let's assume we pass the ID and let a child component handle it, 
-    // or we skip price for the big banner to keep it simple.
     date: new Date(event.startDate).toLocaleDateString(),
   }));
 

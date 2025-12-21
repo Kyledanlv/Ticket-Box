@@ -1,4 +1,4 @@
-// src/analytics/components/charts/TopEventsLeaderboard.jsx
+// src/analytics/components/charts/TopEventsLeaderBoard.jsx
 import React, { useState } from 'react';
 import { 
   BarChart, 
@@ -15,6 +15,36 @@ import { useTopEventsData } from '../../hooks/useTopEventsData';
 import { useAnalytics } from '../../contexts/AnalyticsContext';
 import { formatCurrency, formatNumber } from '../../utils/formatters';
 import { CHART_COLORS } from '../../utils/colors';
+
+// Hàm cắt ngắn text nếu quá dài
+const truncateText = (text, maxLength = 25) => {
+  if (!text) return '';
+  if (text.length <= maxLength) return text;
+  return text.substring(0, maxLength) + '...';
+};
+
+// Custom YAxis Label với tooltip
+const CustomYAxisTick = ({ x, y, payload }) => {
+  const fullText = payload.value;
+  const truncatedText = truncateText(fullText, 25);
+  
+  return (
+    <g transform={`translate(${x},${y})`}>
+      <title>{fullText}</title>
+      <text 
+        x={0} 
+        y={0} 
+        dy={4} 
+        textAnchor="end" 
+        fill="#666"
+        fontSize={11}
+        className="cursor-pointer hover:fill-blue-600"
+      >
+        {truncatedText}
+      </text>
+    </g>
+  );
+};
 
 export const TopEventsLeaderboard = ({ 
   limit = 10,
@@ -34,16 +64,23 @@ export const TopEventsLeaderboard = ({
     }
   };
   
-  const CustomTooltip = ({ active, payload, label }) => {
+  // Custom Tooltip hiển thị đầy đủ tên sự kiện
+  const CustomTooltip = ({ active, payload }) => {
     if (active && payload && payload.length) {
+      const dataPoint = payload[0].payload;
+      const fullName = dataPoint.eventName || dataPoint.ticketType || '';
+      
       return (
-        <div className="bg-white p-3 shadow-lg border rounded-lg">
-          <p className="font-medium text-gray-900 mb-2">{label}</p>
+        <div className="bg-white p-4 shadow-xl border rounded-lg max-w-xs">
+          <p className="font-semibold text-gray-900 mb-2 break-words">{fullName}</p>
           {payload.map((entry, index) => (
-            <p key={index} style={{ color: entry.color }} className="text-sm">
+            <p key={index} style={{ color: entry.color }} className="text-sm font-medium">
               {entry.name}: {entry.name.includes('Revenue') ? formatCurrency(entry.value) : formatNumber(entry.value)}
             </p>
           ))}
+          {dataPoint.organizerName && (
+            <p className="text-xs text-gray-500 mt-1">By: {dataPoint.organizerName}</p>
+          )}
         </div>
       );
     }
@@ -64,21 +101,24 @@ export const TopEventsLeaderboard = ({
           <BarChart 
             data={data} 
             layout="vertical"
-            margin={{ top: 20, right: 30, left: 100, bottom: 20 }}
+            margin={{ top: 20, right: 30, left: 150, bottom: 20 }}
+            barCategoryGap="15%"
           >
             <CartesianGrid strokeDasharray="3 3" horizontal={false} />
             <XAxis 
               type="number"
               tickFormatter={role === 'ADMIN' || !eventId ? formatCurrency : formatNumber}
+              tick={{ fontSize: 11 }}
             />
             <YAxis 
               type="category" 
               dataKey={role === 'ADMIN' || !eventId ? "eventName" : "ticketType"}
-              width={90}
-              tick={{ fontSize: 12 }}
+              width={140}
+              tick={<CustomYAxisTick />}
+              interval={0}
             />
-            <Tooltip content={<CustomTooltip />} />
-            <Legend />
+            <Tooltip content={<CustomTooltip />} cursor={{ fill: 'rgba(59, 130, 246, 0.1)' }} />
+            <Legend wrapperStyle={{ fontSize: '12px' }} />
             
             {role === 'ADMIN' ? (
               <Bar 

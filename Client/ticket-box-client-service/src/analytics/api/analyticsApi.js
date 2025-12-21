@@ -1,5 +1,6 @@
-// src/analytics/services/analyticsApi.js
+// src/analytics/api/analyticsApi.js
 import axios from 'axios';
+import { useAuthStore } from '../../store/useAuthStore';
 
 const API_BASE_URL = import.meta.env.VITE_ANALYTICS_API_URL || 'http://localhost:8081/api/analytics';
 
@@ -15,9 +16,13 @@ const analyticsApi = axios.create({
 // Request interceptor to add auth token
 analyticsApi.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('accessToken');
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
+    const { accessToken } = useAuthStore.getState();
+    if (accessToken) {
+      config.headers.Authorization = `Bearer ${accessToken}`;
+      console.log('Analytics API Request:', config.method.toUpperCase(), config.url);
+      console.log('Token present:', !!accessToken);
+    } else {
+      console.warn('No access token available for analytics request');
     }
     return config;
   },
@@ -30,13 +35,20 @@ analyticsApi.interceptors.request.use(
 analyticsApi.interceptors.response.use(
   (response) => response.data,
   (error) => {
-    if (error.response?.status === 401) {
+    console.error('Analytics API Error Details:', {
+      status: error.response?.status,
+      statusText: error.response?.statusText,
+      url: error.config?.url,
+      data: error.response?.data
+    });
+    
+    if (error.response?.status === 401 || error.response?.status === 403) {
+      console.error('Authentication failed for analytics API');
       // Handle unauthorized - redirect to login
-      localStorage.removeItem('accessToken');
-      window.location.href = '/login';
+      useAuthStore.getState().logout();
+      window.location.href = '/';
     }
     
-    console.error('Analytics API Error:', error);
     return Promise.reject(error);
   }
 );
@@ -55,10 +67,10 @@ export const analyticsApiService = {
   
   // Top Events APIs
   getTopEvents: (limit = 10) =>
-    analyticsApi.get(`/top-events`, { params: { limit } }),
+    analyticsApi.get(`/events/top`, { params: { limit } }),
   
   getOrganizerTopEvents: (organizerId, limit = 10) =>
-    analyticsApi.get(`/top-events/organizer/${organizerId}`, { params: { limit } }),
+    analyticsApi.get(`/events/organizer/${organizerId}`, { params: { limit } }),
   
   // KPI APIs
   getSystemKPI: (timeRange = '30d') =>

@@ -15,5 +15,6 @@ public class CustomPage<T> {
     private int pageNo;
     private int pageSize;
     private int totalPages;
+    private long totalElements;
     List<T> pageContent;
 }

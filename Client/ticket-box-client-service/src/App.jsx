@@ -1,3 +1,4 @@
+// Client/ticket-box-client-service/src/App.jsx - UPDATED VERSION
 import React, { Suspense } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
@@ -11,13 +12,15 @@ import { useAuthStore } from "./store/useAuthStore";
 // --- Page Components ---
 const HomePage = React.lazy(() => import("./pages/homePage"));
 const EventDetailPage = React.lazy(() => import("./pages/eventDetailPage"));
-const EventCreationPage = React.lazy(() => import("./pages/eventCreationPage"))
+const EventCreationPage = React.lazy(() => import("./pages/eventCreationPage"));
+const MyEventsPage = React.lazy(() => import("./pages/myEventsPage"));
+const AdminDashboardPage = React.lazy(() => import("./pages/adminDashboardPage"));
 
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       staleTime: 1000 * 60 * 5, // 5 minutes
-      refetchOnWindowFocus: false, // Good default for stability
+      refetchOnWindowFocus: false,
     },
   },
 });
@@ -39,6 +42,8 @@ export default function App() {
               {/* --- Public Routes --- */}
               <Route index element={<HomePage />} />
               <Route path="event/:eventId" element={<EventDetailPage />} />
+              
+              {/* --- Protected Routes --- */}
               <Route
                 path="/create-event"
                 element={
@@ -50,21 +55,29 @@ export default function App() {
                 }
               />
 
-              {/* --- Protected Routes (Example) --- */}
-              {/* Uncomment these as you build the components */}
-              {/* <Route path="/my-tickets" element={
-                <RoleBasedRoute roles={['ROLE_USER']}>
-                  <MyTicketsPage />
-                </RoleBasedRoute>
-              } /> */}
-              {/* <Route path="/admin" element={
-                <RoleBasedRoute roles={['ROLE_ADMIN', 'ROLE_APPROVER']}>
-                  <AdminDashboard />
-                </RoleBasedRoute>
-              } /> */}
+              {/* My Events Page - For Organizers */}
+              <Route
+                path="/my-events"
+                element={
+                  <RoleBasedRoute
+                    roles={["ROLE_USER", "ROLE_ADMIN", "ROLE_APPROVER"]}
+                  >
+                    <MyEventsPage />
+                  </RoleBasedRoute>
+                }
+              />
+
+              {/* Admin Dashboard - Only for Admins */}
+              <Route
+                path="/admin-dashboard"
+                element={
+                  <RoleBasedRoute roles={["ROLE_ADMIN"]}>
+                    <AdminDashboardPage />
+                  </RoleBasedRoute>
+                }
+              />
 
               {/* --- Catch-all (404) Route --- */}
-              {/* Any path not matched above will redirect to the home page */}
               <Route path="*" element={<Navigate to="/" replace />} />
             </Route>
           </Routes>
@@ -97,16 +110,13 @@ const RoleBasedRoute = ({ children, roles }) => {
   const isAuth = !!user;
 
   // Check if user has one of the required roles
-  // We assume the `user` object has a `roles` array like:
-  // user.roles = [{ name: 'ROLE_USER' }, { name: 'ROLE_ADMIN' }]
   const hasRole =
     isAuth && user.roles.some((role) => roles.includes(role.name));
 
   if (!isAuth || !hasRole) {
-    // Redirect to home page if not authenticated or authorized
     console.warn("Unauthorized access attempt to a protected route.");
     return <Navigate to="/" replace />;
   }
 
-  return children; // Render the protected component
+  return children;
 };

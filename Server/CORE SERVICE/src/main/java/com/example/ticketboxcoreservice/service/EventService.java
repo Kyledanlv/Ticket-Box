@@ -110,6 +110,8 @@ public class EventService {
         return CustomPage.<EventResponse>builder()
                 .pageNo(events.getNumber() + 1)
                 .pageSize(events.getSize())
+                .totalPages(events.getTotalPages())
+                .totalElements(events.getTotalElements())
                 .pageContent(events.getContent().stream().map(
                         event -> modelMapper.map(event, EventResponse.class)
                 ).collect(Collectors.toList()))
@@ -121,6 +123,8 @@ public class EventService {
         return CustomPage.<EventResponse>builder()
                 .pageNo(events.getNumber() + 1)
                 .pageSize(events.getSize())
+                .totalPages(events.getTotalPages())
+                .totalElements(events.getTotalElements())
                 .pageContent(events.getContent().stream().map(
                         event -> modelMapper.map(event, EventResponse.class)
                 ).collect(Collectors.toList()))
@@ -132,6 +136,8 @@ public class EventService {
         return CustomPage.<EventResponse>builder()
                 .pageNo(events.getNumber() + 1)
                 .pageSize(events.getSize())
+                .totalPages(events.getTotalPages())
+                .totalElements(events.getTotalElements())
                 .pageContent(events.getContent().stream().map(
                         event -> modelMapper.map(event, EventResponse.class)
                 ).collect(Collectors.toList()))

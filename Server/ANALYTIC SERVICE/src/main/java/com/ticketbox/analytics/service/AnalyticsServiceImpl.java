@@ -70,7 +70,6 @@ public class AnalyticsServiceImpl implements AnalyticsService {
         summary.setTotalTickets(((Number) summaryResult.get("tickets_sold")).intValue());
         summary.setTotalOrders(((Number) summaryResult.get("total_orders")).intValue());
         summary.setAverageTicketPrice(convertToBigDecimal(summaryResult.get("avg_ticket_price")));
-        summary.setRevenueChange(BigDecimal.valueOf(Math.random() * 30 - 10));
 
         response.setSummary(summary);
         response.setChartData(chartData);
@@ -106,7 +105,6 @@ public class AnalyticsServiceImpl implements AnalyticsService {
         summary.setTotalTickets(((Number) summaryResult.get("tickets_sold")).intValue());
         summary.setTotalOrders(((Number) summaryResult.get("total_orders")).intValue());
         summary.setAverageTicketPrice(convertToBigDecimal(summaryResult.get("avg_ticket_price")));
-        summary.setRevenueChange(BigDecimal.valueOf(Math.random() * 30 - 10));
 
         response.setSummary(summary);
         response.setChartData(chartData);
@@ -141,7 +139,6 @@ public class AnalyticsServiceImpl implements AnalyticsService {
         summary.setTotalOrders(((Number) summaryResult.get("total_orders")).intValue());
         summary.setAverageTicketPrice(convertToBigDecimal(summaryResult.get("avg_ticket_price")));
         summary.setRevenueChange(BigDecimal.valueOf(Math.random() * 30 - 10));
-
         response.setSummary(summary);
         response.setChartData(chartData);
 
@@ -345,11 +342,6 @@ public class AnalyticsServiceImpl implements AnalyticsService {
         response.setActiveEvents(((Number) result.get("active_events")).intValue());
         response.setAvgOrderValue(convertToBigDecimal(result.get("avg_order_value")));
         response.setRevenueChange(BigDecimal.valueOf(Math.random() * 50 - 10));
-        response.setTicketsSoldChange(BigDecimal.valueOf(Math.random() * 40 - 10));
-
-        // Thêm các fields còn thiếu
-        response.setConversionRate(BigDecimal.valueOf(Math.random() * 100));
-
         return response;
     }
 
@@ -383,7 +375,6 @@ public class AnalyticsServiceImpl implements AnalyticsService {
         return response;
     }
 
-    // Helper method to convert Double to BigDecimal
     private BigDecimal convertToBigDecimal(Object value) {
         if (value == null) {
             return BigDecimal.ZERO;

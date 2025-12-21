@@ -25,6 +25,16 @@ const getEventsByCategory = async(categoryId, page = 1, pageSize = 10) => {
   // This will return the CustomPage<EventResponse> object
 };
 
+const getEventsByCreatorId = async(creatorUserId, page = 1, pageSize = 10) => {
+  if (!creatorUserId) return Promise.reject(new Error('Creator User ID is required.'));
+  return await handleApiResponse(apiClient.get(`/events/creator/${creatorUserId}`, {
+    params: {
+      pageNo: page,
+      pageSize: pageSize,
+    }
+  }));
+};
+
 const createEvent = async({ creatorUserId, eventData }) => {
   // Sends JSON data to create the event entity
   return await handleApiResponse(
@@ -82,6 +92,16 @@ export const useEventsByCategory = (categoryId) => {
     queryFn: async() => await getEventsByCategory(categoryId), // Fetches page 1, 10 items
     enabled: !!categoryId,
     staleTime: 1000 * 60 * 5, // Cache for 5 minutes
+  });
+};
+
+
+export const useEventsByCreatorId = (creatorUserId, page = 1, pageSize = 10) => {
+  return useQuery({
+    queryKey: ['events', 'creator', creatorUserId, page, pageSize],
+    queryFn: async() => await getEventsByCreatorId(creatorUserId, page, pageSize),
+    enabled: !!creatorUserId,
+    staleTime: 1000 * 60 * 5,
   });
 };
 

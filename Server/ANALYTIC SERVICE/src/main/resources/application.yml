@@ -16,14 +16,12 @@ spring:
   jpa:
     enabled: false
 
-  # Tắt Security
-  autoconfigure:
-    exclude:
-      - org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
-      - org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration
-
 server:
   port: 8081
+
+app:
+  jwt-secret: fe7276816fef85a611a8d9864c9679e491729cf34601a31d43aa30f866eb515d
+  jwt-expiration-milliseconds: '3600000'
 
 logging:
   level:

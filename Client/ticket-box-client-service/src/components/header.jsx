@@ -1,5 +1,6 @@
+// Client/ticket-box-client-service/src/components/header.jsx - UPDATED VERSION
 import React, { useState } from "react";
-import { Search, Ticket, User, PlusCircle } from "lucide-react";
+import { Search, Ticket, User, PlusCircle, Calendar, Shield } from "lucide-react";
 import { useAuthStore } from "../store/useAuthStore";
 import { useUIStore } from "../store/useUiStore";
 import { Link } from 'react-router-dom';
@@ -7,6 +8,12 @@ import { Link } from 'react-router-dom';
 export default function Header() {
   const { user, logout } = useAuthStore();
   const { openAuthModal } = useUIStore();
+
+  // Check user roles
+  const isAdmin = user?.roles?.some(role => role.name === 'ROLE_ADMIN');
+  const hasEventCreationRole = user?.roles?.some(role => 
+    role.name === 'ROLE_USER' || role.name === 'ROLE_ADMIN' || role.name === 'ROLE_APPROVER'
+  );
 
   return (
     <header className="sticky top-0 z-40 bg-gray-900/80 backdrop-blur-md">
@@ -61,16 +68,41 @@ export default function Header() {
         </div>
 
         <div className="flex items-center gap-4">
-          <Link
-            to="/create-event"
-            className="hidden items-center gap-2 rounded-full bg-blue-600 px-4 py-2 text-sm font-semibold hover:bg-blue-700 md:flex"
-          >
-            <PlusCircle className="h-4 w-4" />
-            Create Event
-          </Link>
-
           {user ? (
             <>
+              {/* My Events Button - For users who can create events */}
+              {hasEventCreationRole && (
+                <Link
+                  to="/my-events"
+                  className="hidden items-center gap-2 rounded-full bg-green-600 px-4 py-2 text-sm font-semibold hover:bg-green-700 md:flex"
+                >
+                  <Calendar className="h-4 w-4" />
+                  My Events
+                </Link>
+              )}
+
+              {/* Admin Dashboard Button - Only for admins */}
+              {isAdmin && (
+                <Link
+                  to="/admin-dashboard"
+                  className="hidden items-center gap-2 rounded-full bg-purple-600 px-4 py-2 text-sm font-semibold hover:bg-purple-700 md:flex"
+                >
+                  <Shield className="h-4 w-4" />
+                  Admin Panel
+                </Link>
+              )}
+
+              {/* Create Event Button */}
+              {hasEventCreationRole && (
+                <Link
+                  to="/create-event"
+                  className="hidden items-center gap-2 rounded-full bg-blue-600 px-4 py-2 text-sm font-semibold hover:bg-blue-700 md:flex"
+                >
+                  <PlusCircle className="h-4 w-4" />
+                  Create Event
+                </Link>
+              )}
+
               <a
                 href="/my-tickets"
                 className="flex items-center gap-2 text-sm font-medium hover:text-blue-400"
@@ -78,6 +110,7 @@ export default function Header() {
                 <Ticket className="h-5 w-5" />
                 My Tickets
               </a>
+              
               <button
                 onClick={logout}
                 className="flex items-center gap-2 text-sm font-medium hover:text-blue-400"
