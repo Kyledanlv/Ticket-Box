@@ -1,12 +1,10 @@
 import axios from 'axios';
 import { useAuthStore } from '../store/useAuthStore';
+import { toast } from 'sonner';
 
 // Base URL from the API documentation
 const apiClient = axios.create({
   baseURL: import.meta.env.VITE_CORE_BASE_URL,
-  headers: {
-    'Content-Type': 'application/json',
-  },
 });
 
 // --- Request Interceptor ---
@@ -39,9 +37,13 @@ apiClient.interceptors.response.use(
       // Call the logout action from our Zustand store
       useAuthStore.getState().logout();
       // Redirect to login page
-      // We'll use window.location as this is outside React's context.
       window.location.href = '/login';
     }
+
+    // Global Error Toast for HTTP errors
+    const errorMessage = error.response?.data?.message || error.message || "A network error occurred.";
+    toast.error(errorMessage);
+
     return Promise.reject(error);
   }
 );
@@ -53,16 +55,18 @@ apiClient.interceptors.response.use(
  * @param {Promise} request - The Axios request promise.
  * @returns {Promise<any>} - The `data` field from the API response.
  */
-export const handleApiResponse = async(request) => {
+export const handleApiResponse = async (request) => {
   try {
     const response = await request;
     // `data` here is the Axios response data, which is our backend's ApiResponse object
-    const apiResponse = response.data; 
-    
+    const apiResponse = response.data;
+
     if (apiResponse.code == 200 && apiResponse.data !== undefined) {
       return apiResponse.data;
     } else {
-      throw new Error(apiResponse.message || 'An API error occurred.');
+      const msg = apiResponse.message || 'An API error occurred.';
+      toast.error(msg); // Toast logical errors too
+      throw new Error(msg);
     }
   } catch (error) {
     throw error;
