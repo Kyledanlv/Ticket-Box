@@ -15,6 +15,9 @@ const EventCreationPage = React.lazy(() => import("./pages/eventCreationPage"));
 const ApproverDashboard = React.lazy(() => import("./pages/approverDashboard"));
 const SearchResultsPage = React.lazy(() => import("./pages/searchResultsPage"));
 const CartPage = React.lazy(() => import("./pages/cartPage"));
+const OrderHistoryPage = React.lazy(() => import("./pages/orderHistoryPage"));
+const CategoryPage = React.lazy(() => import("./pages/categoryPage"));
+const UserProfilePage = React.lazy(() => import("./pages/userProfilePage"));
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -43,7 +46,9 @@ export default function App() {
               <Route index element={<HomePage />} />
               <Route path="event/:eventId" element={<EventDetailPage />} />
               <Route path="search" element={<SearchResultsPage />} />
+              <Route path="category/:categoryId" element={<CategoryPage />} />
 
+              {/* --- Protected Routes --- */}
               <Route
                 path="/create-event"
                 element={
@@ -70,18 +75,22 @@ export default function App() {
                 </RoleBasedRoute>
               } />
 
-              {/* --- Protected Routes (Example) --- */}
-              {/* <Route path="/my-tickets" element={
-                <RoleBasedRoute roles={['ROLE_USER']}>
-                  <MyTicketsPage />
+              <Route path="/order-history" element={
+                <RoleBasedRoute roles={['ROLE_USER', 'ROLE_APPROVER', 'ROLE_ADMIN']}>
+                  <OrderHistoryPage />
                 </RoleBasedRoute>
-              } /> */}
+              } />
+
+              <Route path="/profile" element={
+                <RoleBasedRoute roles={['ROLE_USER', 'ROLE_APPROVER', 'ROLE_ADMIN']}>
+                  <UserProfilePage />
+                </RoleBasedRoute>
+              } />
 
               {/* --- Catch-all (404) Route --- */}
               {/* Any path not matched above will redirect to the home page */}
               <Route path="*" element={<Navigate to="/" replace />} />
             </Route>
-            <Route path="/cart-tickets" element={<CartPage />} />
           </Routes>
         </Suspense>
       </BrowserRouter>
